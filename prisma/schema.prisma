@@ -17,6 +17,11 @@ enum Category {
   ANIME @map("anime")
 }
 
+enum UserRole {
+  USER  @map("user")
+  ADMIN @map("admin")
+}
+
 model Item {
   id          Int      @id @unique @default(autoincrement()) @db.Integer
   title       String   @unique @db.VarChar(255)
@@ -30,11 +35,13 @@ model Item {
 }
 
 model User {
-  id         Int    @id @unique @default(autoincrement()) @db.Integer
-  username   String @unique @db.VarChar(50)
-  password   String @db.VarChar(255)
-  level      Int    @default(0) @db.Integer
-  experience Int[]  @default([0, 1000]) @db.Integer
-  topItems   Int[]  @map("top_items")
+  id         Int      @id @unique @default(autoincrement()) @db.Integer
+  username   String   @unique @db.VarChar(50)
+  password   String   @db.VarChar(255)
+  avatar     Bytes    @db.ByteA
+  level      Int      @default(0) @db.Integer
+  experience Int[]    @default([0, 1000]) @db.Integer
+  topItems   Int[]    @map("top_items")
   items      Item[]
+  role       UserRole @default(USER)
 }
