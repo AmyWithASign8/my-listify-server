@@ -22,6 +22,11 @@ enum UserRole {
   ADMIN @map("admin")
 }
 
+enum Theme {
+  DARK  @map("dark")
+  LIGHT @map("light")
+}
+
 model Item {
   id          Int      @id @unique @default(autoincrement()) @db.Integer
   title       String   @unique @db.VarChar(255)
@@ -43,5 +48,6 @@ model User {
   experience Int[]    @default([0, 1000]) @db.Integer
   topItems   Int[]    @map("top_items")
   items      Item[]
+  theme      Theme    @default(LIGHT)
   role       UserRole @default(USER)
 }
