@@ -14,7 +14,9 @@ datasource db {
 }
 
 enum Category {
-  ANIME @map("anime")
+  ANIME      @map("anime")
+  LITERATURE @map("literature")
+  FILMS      @map("films")
 }
 
 enum UserRole {
