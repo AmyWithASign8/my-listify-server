@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 
-import { AuthExpire } from './user.constant';
+import { AuthExpire, ExperienceToIncreaseLevel } from './user.constant';
 import { PrismaClientService } from 'src/prisma-client/prisma-client.service';
 
 import type { IAuthorizeDto, ICreateUserDto } from './user.interface';
@@ -71,6 +71,37 @@ export class UserService {
 
   async extendAuth(sid: string) {
     this.sessions.expire(sid, AuthExpire);
+  }
+
+  async increaseUserLevel(experience: number, userId: number) {
+    const currentLevelInfo = await this.db.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: { level: true, experience: true },
+    });
+
+    let result = currentLevelInfo;
+
+    const newExperience = currentLevelInfo.experience[0] + experience;
+
+    if (newExperience >= ExperienceToIncreaseLevel) {
+      const newLevel =
+        currentLevelInfo.level +
+        Math.min(newExperience / ExperienceToIncreaseLevel);
+
+      result = { level: newLevel };
+    } else {
+      await this.db.user.update({
+        where: { id: userId },
+        data: { experience: [newExperience, ExperienceToIncreaseLevel] },
+      });
+
+      result = {
+        ...result,
+        experience: [newExperience, ExperienceToIncreaseLevel],
+      };
+    }
+
+    return result;
   }
 
   private async createUser(data: ICreateUserDto) {

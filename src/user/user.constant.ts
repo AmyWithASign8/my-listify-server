@@ -4,3 +4,5 @@ export enum UserTheme {
   LIGHT = 'light',
   DARK = 'dark',
 }
+
+export const ExperienceToIncreaseLevel = 1_000;
