@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 
-import { AuthExpire, ExperienceToIncreaseLevel } from './user.constant';
+import {
+  AuthExpire,
+  ExperienceToIncreaseLevel,
+  RewardKitEnum,
+} from './user.constant';
 import { PrismaClientService } from 'src/prisma-client/prisma-client.service';
 
 import type { IAuthorizeDto, ICreateUserDto } from './user.interface';
@@ -23,6 +27,8 @@ export class UserService {
     }
 
     const user = await this.createUser(data);
+
+    await this.increaseUserLevel(RewardKitEnum.REGISTRATION, user.id);
 
     const sid = this.auth(user.id);
 
@@ -88,7 +94,7 @@ export class UserService {
         currentLevelInfo.level +
         Math.min(newExperience / ExperienceToIncreaseLevel);
 
-      result = { level: newLevel };
+      result.level = newLevel;
     } else {
       await this.db.user.update({
         where: { id: userId },

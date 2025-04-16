@@ -6,3 +6,8 @@ export enum UserTheme {
 }
 
 export const ExperienceToIncreaseLevel = 1_000;
+
+export enum RewardKitEnum {
+  REGISTRATION = 250,
+  ADD_ITEM = 250,
+}
