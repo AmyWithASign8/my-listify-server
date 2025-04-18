@@ -17,7 +17,7 @@ import { AuthGuard } from 'src/common/guards/auth.guard';
 
 import type { IAuthorizeDto, ICreateUserDto } from './user.interface';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
