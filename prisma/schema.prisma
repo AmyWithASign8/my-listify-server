@@ -37,8 +37,10 @@ model Item {
   rating      Int      @default(0) @db.SmallInt
   favorite    Boolean  @default(false) @db.Boolean
   category    Category
-  userId      Int?     @db.Integer
-  User        User?    @relation(fields: [userId], references: [id])
+  userId      Int?     @map("user_id") @db.Integer
+  user        User?    @relation(fields: [userId], references: [id])
+
+  @@map("item")
 }
 
 model User {
@@ -52,4 +54,6 @@ model User {
   items      Item[]
   theme      Theme    @default(LIGHT)
   role       UserRole @default(USER)
+
+  @@map("user")
 }
