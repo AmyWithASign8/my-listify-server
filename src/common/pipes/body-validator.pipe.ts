@@ -17,7 +17,7 @@ export const BodyValidator = createParamDecorator(
     const { error, value } = schema.validate(request.body);
 
     if (error) {
-      response.status(HttpStatus.BAD_REQUEST).send(error);
+      response.status(HttpStatus.BAD_REQUEST).send({ message: error.message });
 
       throw new Error(error.message);
     }
