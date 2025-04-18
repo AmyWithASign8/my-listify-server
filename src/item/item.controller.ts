@@ -20,7 +20,7 @@ import { PrismaClientService } from 'src/prisma-client/prisma-client.service';
 import type { ItemCategory } from './item.constant';
 import type { ICreateItem } from './item.interface';
 
-@Controller({ version: '1', path: 'item' })
+@Controller({ version: '1', path: 'items' })
 @UseGuards(AuthGuard)
 export class ItemController {
   constructor(
@@ -45,7 +45,7 @@ export class ItemController {
     return result;
   }
 
-  @Get(':userId/get-items')
+  @Get(':userId')
   async handleGetItems(
     @Param('userId') userId: number,
     @Query('category') category: string,

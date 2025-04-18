@@ -1,10 +1,19 @@
-import { Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpStatus,
+  Patch,
+  Post,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { type FastifyReply } from 'fastify';
 
 import { BodyValidator } from 'src/common/pipes/body-validator.pipe';
 import { RegistrationSchema } from './schemas/registration.schema';
 import { UserService } from './user.service';
 import { Cookies } from 'src/common/decorators/cookie.decorator';
+import { AuthGuard } from 'src/common/guards/auth.guard';
 
 import type { IAuthorizeDto, ICreateUserDto } from './user.interface';
 
@@ -12,7 +21,7 @@ import type { IAuthorizeDto, ICreateUserDto } from './user.interface';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Post('registration')
+  @Post()
   async registration(
     @Res() reply: FastifyReply,
     @BodyValidator(RegistrationSchema) dto: ICreateUserDto,
@@ -30,7 +39,7 @@ export class UserController {
     reply.status(HttpStatus.CREATED).send({ sid });
   }
 
-  @Post('authorize')
+  @Post('client')
   async authorize(
     @Res() reply: FastifyReply,
     @BodyValidator() dto: IAuthorizeDto,
@@ -57,7 +66,7 @@ export class UserController {
     reply.send({ sid });
   }
 
-  @Get('authinticate')
+  @Get()
   async authinticate(@Cookies('sid') sid: string, @Res() reply: FastifyReply) {
     const user = await this.userService.checkAuth(sid);
 
@@ -71,4 +80,8 @@ export class UserController {
 
     reply.send(user);
   }
+
+  @UseGuards(AuthGuard)
+  @Patch()
+  updateUserOptions() {}
 }
